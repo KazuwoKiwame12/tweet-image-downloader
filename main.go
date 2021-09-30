@@ -2,7 +2,10 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"io"
 	"log"
+	"net/http"
 	"os"
 
 	"tweet-image-downloader/entity"
@@ -53,6 +56,23 @@ func main() {
 			}
 		}
 	}
+
+	for i, link := range links {
+		res, err := http.Get(link)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer res.Body.Close()
+
+		f, err := os.Create(fmt.Sprintf("%d.jpg", i))
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer f.Close()
+
+		io.Copy(f, res.Body)
+	}
+	fmt.Println("Finish!")
 }
 
 func latestTweet(tweets []entity.Tweet) entity.Tweet {
