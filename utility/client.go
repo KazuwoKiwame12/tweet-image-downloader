@@ -9,14 +9,16 @@ import (
 )
 
 type TwitterClient struct {
-	token string
+	token      string
+	httpClient HttpClient
 }
 
 var baseURL string = "https://api.twitter.com/2/tweets/search/recent"
 
-func NewTwitterClient(token string) *TwitterClient {
+func NewTwitterClient(token string, hClient HttpClient) *TwitterClient {
 	return &TwitterClient{
-		token: token,
+		token:      token,
+		httpClient: hClient,
 	}
 }
 
@@ -28,12 +30,11 @@ func (t *TwitterClient) GetTweets(con Conditions) (*entity.TweetResponse, error)
 	}
 
 	// APIエンドポイントにリクエストを投げる
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := t.httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
-	if resp.StatusCode != 200 {
+	if resp.StatusCode != http.StatusOK {
 		return nil, entity.ErrorIsnotIdealStatusCode(resp.StatusCode)
 	}
 

@@ -41,7 +41,8 @@ func main() {
 	if err != nil {
 		log.Fatal("error: loading .env file")
 	}
-	client := utility.NewTwitterClient(os.Getenv("BEARER_TOKEN"))
+	httpClient := &http.Client{}
+	client := utility.NewTwitterClient(os.Getenv("BEARER_TOKEN"), httpClient)
 	res, err := client.GetTweets(con)
 	if err != nil {
 		log.Fatal(err)
