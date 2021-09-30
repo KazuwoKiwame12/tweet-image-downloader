@@ -239,3 +239,43 @@ func isSameContent(a, b *entity.TweetResponse, t *testing.T) bool {
 
 	return true
 }
+
+func Test_CreateResponse(t *testing.T) {
+	tests := []struct {
+		name   string
+		input  utility.Conditions
+		want   string
+		hasErr bool
+	}{
+		{
+			name: "success",
+			input: utility.Conditions{
+				UserName: "sample",
+				Keyword:  "sample",
+				Max:      50,
+			},
+			want: "expansions=attachments.media_keys&max_results=50&media.fields=media_key%2Curl&query=has%3Aimages+-is%3Aretweet+from%3Asample+%22sample%22&tweet.fields=created_at%2Cattachments",
+		},
+		{
+			name: "success without keyword",
+			input: utility.Conditions{
+				UserName: "sample",
+				Max:      50,
+			},
+			want: "expansions=attachments.media_keys&max_results=50&media.fields=media_key%2Curl&query=has%3Aimages+-is%3Aretweet+from%3Asample&tweet.fields=created_at%2Cattachments",
+		},
+	}
+
+	for i, test := range tests {
+		t.Run(fmt.Sprintf("%d: %s", i, test.name), func(t *testing.T) {
+			req, err := utility.ExportCreateResponse(&utility.TwitterClient{}, test.input)
+			if (err != nil) != test.hasErr {
+				t.Errorf("failed to match for error: result is %v, hasErr is %v, err content is %v", (err != nil), test.hasErr, err)
+			}
+			result := req.URL.Query().Encode()
+			if result != test.want {
+				t.Errorf("failed to match for request: result is %v, want is %v", result, test.want)
+			}
+		})
+	}
+}
