@@ -33,7 +33,7 @@ func main() {
 		Max:      *maxF,
 	}
 	if !con.ValidateMaxFieldValue() {
-		log.Fatal("error: you should input number between 10 and 100")
+		log.Fatal(entity.ErrorInputMaxFlag)
 	}
 
 	// 2. 条件より、目的の画像を持つツイートを取得
@@ -47,7 +47,7 @@ func main() {
 		log.Fatal(err)
 	}
 	if len(res.Tweets) == 0 {
-		log.Fatal("error: you didn't get any tweet. check url parameters")
+		log.Fatal(entity.ErrorNoTweet)
 	}
 
 	// 3. 最新ツイートから目的の画像のリンク一覧を取得

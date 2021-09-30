@@ -1,7 +1,6 @@
 package utility
 
 import (
-	"errors"
 	"net/url"
 	"regexp"
 	"strconv"
@@ -55,7 +54,7 @@ func (p *paramBuilder) validateEmptyParamValue() (string, error) {
 	e := p.Encode()
 	r := regexp.MustCompile(`(?i)(expansions|max_results|media.fields|query|tweet.fields)=&`)
 	if r.MatchString(e) {
-		return e, errors.New("error: url parameter has empty value")
+		return e, entity.ErrorEmptyParameterValue
 	}
 	return e, nil
 }

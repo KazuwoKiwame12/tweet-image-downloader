@@ -34,7 +34,7 @@ func (t *TwitterClient) GetTweets(con Conditions) (*entity.TweetResponse, error)
 		return nil, err
 	}
 	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("status code is not 200. result is %d", resp.StatusCode)
+		return nil, entity.ErrorIsnotIdealStatusCode(resp.StatusCode)
 	}
 
 	// レスポンスの読み取り
