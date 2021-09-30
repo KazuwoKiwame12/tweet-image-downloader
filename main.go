@@ -32,8 +32,8 @@ func main() {
 		Keyword:  *keywordF,
 		Max:      *maxF,
 	}
-	if !con.ValidateMaxFieldValue() {
-		log.Fatal(entity.ErrorInputMaxFlag)
+	if err := con.ValidateConditions(); err != nil {
+		log.Fatal(err)
 	}
 
 	// 2. 条件より、目的の画像を持つツイートを取得

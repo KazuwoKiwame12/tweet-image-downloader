@@ -7,6 +7,7 @@ import (
 
 var (
 	ErrorInputMaxFlag        error = errors.New("error: you should input number between 10 and 100")
+	ErrorInputUserNameFlag   error = errors.New("error: you should input user name")
 	ErrorLoadEnv             error = errors.New("error: you didn't get any tweet. check url parameters")
 	ErrorNoTweet             error = errors.New("error: you didn't get any tweet. check url parameters")
 	ErrorEmptyParameterValue error = errors.New("error: url parameter has empty value")

@@ -98,9 +98,23 @@ type Conditions struct {
 	Max      int
 }
 
-func (c Conditions) ValidateMaxFieldValue() bool {
+func (c Conditions) ValidateConditions() error {
+	if c.validateKeywordLength() {
+		return entity.ErrorInputUserNameFlag
+	}
+	if c.validateMaxFieldValue() {
+		return entity.ErrorInputMaxFlag
+	}
+	return nil
+}
+
+func (c Conditions) validateMaxFieldValue() bool {
 	if 10 <= c.Max && c.Max <= 100 {
 		return true
 	}
 	return false
+}
+
+func (c Conditions) validateKeywordLength() bool {
+	return len(c.Keyword) > 0
 }
