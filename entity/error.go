@@ -13,5 +13,5 @@ var (
 )
 
 func ErrorIsnotIdealStatusCode(code int) error {
-	return fmt.Errorf("status code is not 200. result is %d", code)
+	return fmt.Errorf("error: status code is not 200. result is %d", code)
 }
