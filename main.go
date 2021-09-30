@@ -16,7 +16,7 @@ import (
 
 var userNameF = flag.String("u", "_kz_dev", "input user name")
 var keywordF = flag.String("k", "最新話です!", "input keyword which target tweet has")
-var maxF = flag.Int("m", 50, "input number of maximum tweets you want")
+var maxF = flag.Int("m", 50, "input number of maximum tweets you want between 10 and 100")
 
 func main() {
 	/*
@@ -31,6 +31,9 @@ func main() {
 		UserName: *userNameF,
 		Keyword:  *keywordF,
 		Max:      *maxF,
+	}
+	if !con.ValidateMaxFieldValue() {
+		log.Fatal("error: you should input number between 10 and 100")
 	}
 
 	// 2. 条件より、目的の画像を持つツイートを取得

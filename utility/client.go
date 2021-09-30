@@ -12,12 +12,6 @@ type TwitterClient struct {
 	token string
 }
 
-type Conditions struct {
-	UserName string
-	Keyword  string
-	Max      int
-}
-
 var baseURL string = "https://api.twitter.com/2/tweets/search/recent"
 
 func NewTwitterClient(token string) *TwitterClient {
@@ -92,4 +86,17 @@ func (t *TwitterClient) createRequest(con Conditions) (*http.Request, error) {
 	}
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", t.token))
 	return req, nil
+}
+
+type Conditions struct {
+	UserName string
+	Keyword  string
+	Max      int
+}
+
+func (c Conditions) ValidateMaxFieldValue() bool {
+	if 10 <= c.Max && c.Max <= 100 {
+		return true
+	}
+	return false
 }
