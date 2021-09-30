@@ -1,4 +1,4 @@
-package main
+package utility
 
 import (
 	"encoding/json"
@@ -8,21 +8,27 @@ import (
 	"tweet-image-downloader/entity"
 )
 
-type Client struct {
+type TwitterClient struct {
 	token string
+}
+
+type Conditions struct {
+	UserName string
+	Keyword  string
+	Max      int
 }
 
 var baseURL string = "https://api.twitter.com/2/tweets/search/recent"
 
-func NewClient(token string) *Client {
-	return &Client{
+func NewTwitterClient(token string) *TwitterClient {
+	return &TwitterClient{
 		token: token,
 	}
 }
 
-func (c *Client) GetTweets(con Conditions) (*entity.TweetResponse, error) {
+func (t *TwitterClient) GetTweets(con Conditions) (*entity.TweetResponse, error) {
 	// リクエストの作成
-	req, err := c.createRequest(con)
+	req, err := t.createRequest(con)
 	if err != nil {
 		return nil, err
 	}
@@ -50,38 +56,40 @@ func (c *Client) GetTweets(con Conditions) (*entity.TweetResponse, error) {
 	return data, nil
 }
 
-func (c *Client) createRequest(con Conditions) (*http.Request, error) {
+func (t *TwitterClient) createRequest(con Conditions) (*http.Request, error) {
 	// apiのurlパラメータの設定
-	queryFields := []entity.QueryField{
+	queryFields := entity.QueryFields{
 		entity.QueryFieldHasImages,
 		entity.QueryFieldIsRetweet.NOT(),
 		entity.QueryFieldFrom(con.UserName),
-		entity.QueryFieldKeyword(con.Keyword),
 	}
-	expansionFields := []entity.ExpansionField{
+	if len(con.Keyword) != 0 {
+		queryFields = append(queryFields, entity.QueryFieldKeyword(con.Keyword))
+	}
+	expansionFields := entity.ExpansionFields{
 		entity.ExpasionFieldMediaKeys,
 	}
-	mediaFields := []entity.MediaField{
+	mediaFields := entity.MediaFields{
 		entity.MediaFieldMediaKey,
 		entity.MediaFieldURL,
 	}
-	tweetFields := []entity.TweetField{
-		entity.TweetFieldAttachments,
+	tweetFields := entity.TweetFields{
 		entity.TweetFieldCreatedAt,
+		entity.TweetFieldAttachments,
 	}
 
-	params := entity.NewParamBuilder().
+	params := NewParamBuilder().
 		Query(queryFields).
 		MaxResults(con.Max).
 		Expansions(expansionFields).
 		MediaFields(mediaFields).
-		TweetFields(tweetFields).String()
+		TweetFields(tweetFields).Build()
 
 	// リクエストの作成
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s?%s", baseURL, params), nil)
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.token))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", t.token))
 	return req, nil
 }
