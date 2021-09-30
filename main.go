@@ -47,7 +47,7 @@ func main() {
 		log.Fatal(err)
 	}
 	if len(res.Tweets) == 0 {
-		log.Fatal("you didn't get any tweet. check url parameters")
+		log.Fatal("error: you didn't get any tweet. check url parameters")
 	}
 
 	// 3. 最新ツイートから目的の画像のリンク一覧を取得
