@@ -1,6 +1,9 @@
 package entity
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 // query parametersの"expasions"に関する設定
 type ExpansionField string
@@ -53,6 +56,7 @@ type TweetField string
 
 const (
 	TweetFieldAttachments TweetField = "attachments"
+	TweetFieldCreatedAt   TweetField = "created_at"
 )
 
 func (t TweetField) String() string {
@@ -62,8 +66,9 @@ func (t TweetField) String() string {
 // responseに関する設定
 type TweetResponse struct {
 	Tweets []struct {
-		ID          string `json:"id"`
-		Text        string `json:"text"`
+		ID          string    `json:"id"`
+		Text        string    `json:"text"`
+		CreatedAt   time.Time `json:"created_at"`
 		Attachments struct {
 			MediaKeys []string `json:"media_keys"`
 		} `json:"attachments"`

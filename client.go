@@ -65,12 +65,17 @@ func (c *Client) createRequest(con Conditions) (*http.Request, error) {
 		entity.MediaFieldMediaKey,
 		entity.MediaFieldURL,
 	}
+	tweetFields := []entity.TweetField{
+		entity.TweetFieldAttachments,
+		entity.TweetFieldCreatedAt,
+	}
 
 	params := entity.NewParamBuilder().
 		Query(queryFields).
 		MaxResults(con.Max).
 		Expansions(expansionFields).
-		MediaFields(mediaFields).String()
+		MediaFields(mediaFields).
+		TweetFields(tweetFields).String()
 
 	// リクエストの作成
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s?%s", baseURL, params), nil)
