@@ -46,6 +46,7 @@ func main() {
 	if len(res.Tweets) == 0 {
 		log.Fatal("you didn't get any tweet. check url parameters")
 	}
+
 	// 3. 最新ツイートから目的の画像のリンク一覧を取得
 	links := make([]string, 0, 4)
 	tweet := latestTweet(res.Tweets)
@@ -57,6 +58,7 @@ func main() {
 		}
 	}
 
+	// 4. 3のリンク一覧から、画像を自身のファイルに書き込む
 	for i, link := range links {
 		res, err := http.Get(link)
 		if err != nil {
