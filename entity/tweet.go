@@ -104,15 +104,16 @@ func (ts TweetFields) ToStringSlice() []string {
 }
 
 // responseに関する設定
+type Tweet struct {
+	ID          string    `json:"id"`
+	Text        string    `json:"text"`
+	CreatedAt   time.Time `json:"created_at"`
+	Attachments struct {
+		MediaKeys []string `json:"media_keys"`
+	} `json:"attachments"`
+}
 type TweetResponse struct {
-	Tweets []struct {
-		ID          string    `json:"id"`
-		Text        string    `json:"text"`
-		CreatedAt   time.Time `json:"created_at"`
-		Attachments struct {
-			MediaKeys []string `json:"media_keys"`
-		} `json:"attachments"`
-	} `json:"data"`
+	Tweets   []Tweet `json:"data"`
 	Includes struct {
 		Media []struct {
 			MediaKey string `json:"media_key"`
