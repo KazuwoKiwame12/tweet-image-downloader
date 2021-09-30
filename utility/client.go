@@ -72,12 +72,15 @@ func (t *TwitterClient) createRequest(con Conditions) (*http.Request, error) {
 		entity.TweetFieldAttachments,
 	}
 
-	params := NewParamBuilder().
+	params, err := NewParamBuilder().
 		Query(queryFields).
 		MaxResults(con.Max).
 		Expansions(expansionFields).
 		MediaFields(mediaFields).
 		TweetFields(tweetFields).Build()
+	if err != nil {
+		return nil, err
+	}
 
 	// リクエストの作成
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s?%s", baseURL, params), nil)

@@ -1,7 +1,9 @@
 package utility
 
 import (
+	"errors"
 	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 	"tweet-image-downloader/entity"
@@ -44,6 +46,16 @@ func (p *paramBuilder) TweetFields(fields entity.TweetFields) *paramBuilder {
 	return p
 }
 
-func (p *paramBuilder) Build() string {
-	return p.Encode()
+func (p *paramBuilder) Build() (string, error) {
+	encoded, err := p.validateEmptyParamValue()
+	return encoded, err
+}
+
+func (p *paramBuilder) validateEmptyParamValue() (string, error) {
+	e := p.Encode()
+	r := regexp.MustCompile(`(?i)(expansions|max_results|media.fields|query|tweet.fields)=&`)
+	if r.MatchString(e) {
+		return e, errors.New("error: url parameter has empty value")
+	}
+	return e, nil
 }
