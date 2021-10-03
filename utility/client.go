@@ -99,10 +99,10 @@ type Conditions struct {
 }
 
 func (c Conditions) ValidateConditions() error {
-	if c.validateKeywordLength() {
+	if !c.validateKeywordLength() {
 		return entity.ErrorInputUserNameFlag
 	}
-	if c.validateMaxFieldValue() {
+	if !c.validateMaxFieldValue() {
 		return entity.ErrorInputMaxFlag
 	}
 	return nil
